@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>读取xlsx表格内容</title>
+        <style type="text/css">
+            
+        </style>
+        <script type="text/javascript" src="./xlsx.core.min.js"></script>
+    </head>
+    <body>
+        <input type="file" onchange="importFile(this)" />
+        <div id="demo"></div>
+        <script>
+            //将文件读取为二进制字符串
+            let readFileByBinary = true;
+            function importFile(inputDom){
+                // console.log(inputDom);
+                // console.log(inputDom.files);
+                let file = inputDom.files[0];
+                // console.log(file);
+                let reader = new FileReader();
+                // let fileName = file.name;
+                reader.onload = function (e) {
+                    let data = e.target.result;
+                    // console.log(data);
+                    let wb = XLSX.read(data, { type: 'binary' });
+                    // console.log(wb);
+                    let currentSheetName = wb.SheetNames[0];
+                    // console.log(currentSheetName);
+                    let currentSheet = wb.Sheets[currentSheetName];
+                    let dataFromSheet = XLSX.utils.sheet_to_json(currentSheet);
+                    // console.log(dataFromSheet)
+                    let dataForamt = JSON.stringify(dataFromSheet);
+                    console.log(dataForamt);
+                    document.getElementById("demo").innerHTML = dataForamt;
+                };
+                if (readFileByBinary){
+                    reader.readAsBinaryString(file);
+                }
+            }
+        </script>
+    </body>
+</html>
